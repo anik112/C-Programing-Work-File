@@ -61,7 +61,7 @@ int main(){
         printf("-"); // print -
     }
 
-    printf("\n"); // print new line.
+    printf("\n"); //  print new line.
     // loop for print array data in a table
     for(int i=0; i<tableSize; i++){
         // inner loop for access index
