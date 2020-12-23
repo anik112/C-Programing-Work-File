@@ -12,7 +12,6 @@ const string subjects[]= {"CSE","EEE","MAT"};
 const int lenOfSemesters = sizeof(semesters)/sizeof(semesters[0]);
 const int lenOfSubjects=sizeof(subjects)/sizeof(subjects[0]);
 
-
 //============= for draw outline ========================
 void gotoxy(int x,int y)
 {
@@ -139,13 +138,51 @@ bool login()
     }
 }
 
-
-void addAuthor()
+int viewAuthor()
 {
+lblStrt:
+    int checker=-1;
+    Category category;
+    ifstream MyReadFile("author-info.txt");
+    string lineText="";
 
+    cout<<":: View All Author Information :: \n\n";
+    while(getline(MyReadFile, lineText))
+    {
+        char *str=strdup(lineText.c_str());
+        // Returns first token
+        char *token = strtok(str, ":");
+
+        // Keep printing tokens while one of the
+        // delimiters present in str[].
+        cout<<"Author ID: "<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Author Name: "<<token<<"\n";
+        cout<<"====\n";
+    }
+
+    cin>>checker;
+    if((checker)==0)
+    {
+        system("cls");
+        return 0;
+    }
+    else
+    {
+        goto lblStrt;
+    }
+}
+
+// add author
+int addAuthor()
+{
+strt:
+    int check=-1;
+    string massage="";
     Author author;
     ofstream file ("author-info.txt",ofstream::app);
 
+    // view design
     headerPart();
     leftSide();
     gotoxy(12,5);
@@ -154,35 +191,91 @@ void addAuthor()
     cout<<"ID: ";
     gotoxy(12,8);
     cout<<"Author Name: ";
+    gotoxy(30,10);
+    cout<<massage;
+    gotoxy(20,25);
+    cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
     rightSide();
     footerPart();
 
-    gotoxy(30,7);
-    cin>>author.authorId;
-    gotoxy(30,8);
-    cin>>author.authorName;
+    // take input from console
+    gotoxy(50,24);
+    cin>>check;
 
-    file<<author.authorId<<":"<<author.authorName<<"#";
-    file.close();
+    switch(check)
+    {
+    case 0:
+        return 0;
+        break;
+    case 1:
+        gotoxy(30,7);
+        cin>>author.authorId;
+        gotoxy(30,8);
+        cin>>author.authorName;
+        if(author.authorId>0)
+        {
+            file <<author.authorId<<":"<<author.authorName<<"\n";
+            massage="Data Save !!";
+        }
+        system("cls");
+        file.close();
+        goto strt;
+        break;
+    case 2:
+        system("cls");
+        viewAuthor();
+        system("cls");
+        goto strt;
+        break;
+    }
 }
 
-
-int viewCategory(){
+// view category function
+int viewCategory()
+{
+lblStrt:
+    int checker=-1;
     Category category;
-    ofstream file ("category-info.txt",ofstream::app);
+    ifstream MyReadFile("category-info.txt");
+    string lineText="";
 
-    headerPart();
-    gotoxy(12,5);
-    cout<<(char)219<<" Add Category Information "<<(char)219;
+    cout<<":: View All Category Information :: \n\n";
+    while(getline(MyReadFile, lineText))
+    {
+        char *str=strdup(lineText.c_str());
+        // Returns first token
+        char *token = strtok(str, ":");
+
+        // Keep printing tokens while one of the
+        // delimiters present in str[].
+        cout<<"Category ID: "<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Category Name: "<<token<<"\n";
+        cout<<"====\n";
+    }
+
+    cin>>checker;
+    if((checker)==0)
+    {
+        system("cls");
+        return 0;
+    }
+    else
+    {
+        goto lblStrt;
+    }
 
 }
+// add new category function
 int addCategory()
 {
     int check=-1;
+    string massage="";
 strt:
     Category category;
     ofstream file ("category-info.txt",ofstream::app);
 
+    // view design
     headerPart();
     leftSide();
     gotoxy(12,5);
@@ -191,42 +284,49 @@ strt:
     cout<<"ID: ";
     gotoxy(12,8);
     cout<<"Category Name: ";
+    gotoxy(30,10);
+    cout<<massage;
     gotoxy(20,25);
     cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
     rightSide();
     footerPart();
 
-    gotoxy(30,7);
-    cin>>category.categoryId;
-    gotoxy(30,8);
-    cin>>category.categoryName;
-    if(category.categoryId>0)
-    {
-        file <<category.categoryId<<":"<<category.categoryName<<"\n";
-        gotoxy(30,10);
-        cout<<"Data Save !!";
-    }
+    // take input from console
     gotoxy(50,24);
     cin>>check;
+
     switch(check)
     {
     case 0:
         return 0;
         break;
     case 1:
+        gotoxy(30,7);
+        cin>>category.categoryId;
+        gotoxy(30,8);
+        cin>>category.categoryName;
+        if(category.categoryId>0)
+        {
+            file <<category.categoryId<<":"<<category.categoryName<<"\n";
+            massage="Data Save !!";
+        }
         system("cls");
+        file.close();
         goto strt;
         break;
     case 2:
-
+        system("cls");
+        viewCategory();
+        system("cls");
+        goto strt;
+        break;
     }
-    file.close();
 }
 
 
-void mainWindow()
+int mainWindow()
 {
-
+lblViewStart:
     int checker=-1;
 
     headerPart();
@@ -270,11 +370,19 @@ void mainWindow()
     case 1:
         system("cls");
         addCategory();
+        system("cls");
+        goto lblViewStart;
+
         break;
     case 2:
         system("cls");
         addAuthor();
+        system("cls");
+        goto lblViewStart;
+
         break;
+    case 0:
+        return 0;
     }
 
 }
