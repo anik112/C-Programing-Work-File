@@ -1,0 +1,19 @@
+Since many of my classmates have a problem with the requirements of the project, I'll shortlist them here:
+
+1. The deletion shouldn't physically remove the data from the file. It should just flag the record as unavailable, and this operation should make quantity 0.
+
+2. After a book is deleted, it can't be edited/issued.
+
+3. Search Book should have two option to search by. Book ID, or category/keyword.
+
+4. Issusing a book to student should decrement the book quantity, and returning of a book should increment a book quantity.
+
+5. If a book quantity is 0 but not deleted, even then the book can't be issued. However, new stock of books can be added to facilitate issuing of books.
+
+6. Students should be given a unique ID to help them return the book as two or more students can have same name.
+
+7. Book ID should be auto-generated, positive and unique integer. Book price must be positive. 
+
+8. Issue and return date of issuing book should be valid dates.
+
+9. Book and author name should only accept English letters
