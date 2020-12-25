@@ -74,12 +74,13 @@ void footerPart()
 
 class BookInfo
 {
+public:
     int bookId;
     string bookName;
     string bookCategory;
     string bookAuthorName;
     string bookSSNO;
-    int bookRackNumber;
+    string bookRackNumber;
 };
 
 
@@ -324,6 +325,153 @@ strt:
 }
 
 
+// view category function
+int viewBook()
+{
+lblStrt:
+    int checker=-1;
+    BookInfo bookInfo[100];
+    ifstream MyReadFile("book-info.txt");
+    string lineText="";
+
+    cout<<":: View All Book Information :: \n\n";
+
+    while(getline(MyReadFile, lineText))
+    {
+        char *str=strdup(lineText.c_str());
+        // Returns first token
+        char *token = strtok(str, ":");
+
+        // Keep printing tokens while one of the
+        // delimiters present in str[].
+        cout<<"Book ID: "<<token;
+        token = strtok(NULL, ":");
+        cout<<"Book Name: "<<token;
+        token = strtok(NULL, ":");
+        cout<<"Book ID: "<<token;
+        token = strtok(NULL, ":");
+        bookInfo[i].bookAuthorName=token;
+        token = strtok(NULL, ":");
+        bookInfo[i].bookSSNO=token;
+        token = strtok(NULL, ":");
+        bookInfo[i].bookRackNumber=token;
+        i++;
+    }
+
+    cin>>checker;
+    if((checker)==0)
+    {
+        system("cls");
+        return 0;
+    }
+    else
+    {
+        goto lblStrt;
+    }
+
+}
+
+int addBook()
+{
+strt:
+    // get all book from file
+    BookInfo bookInfo[100];
+    ifstream MyReadFile("book-info.txt");
+    string lineText="";
+    int i=0;
+
+    while(getline(MyReadFile, lineText))
+    {
+        char *str=strdup(lineText.c_str());
+        // Returns first token
+        char *token = strtok(str, ":");
+
+        // Keep printing tokens while one of the
+        // delimiters present in str[].
+        bookInfo[i].bookId=(int)token;
+        token = strtok(NULL, ":");
+        bookInfo[i].bookName=token;
+        bookInfo[i].bookCategory=token;
+        bookInfo[i].bookAuthorName=token;
+        bookInfo[i].bookSSNO=token;
+        bookInfo[i].bookRackNumber=token;
+        i++;
+    }
+    //========================
+
+    int check=-1;
+    string massage="";
+
+    BookInfo book;
+    ofstream file ("book-info.txt",ofstream::app);
+
+    // view design
+    headerPart();
+    leftSide();
+    gotoxy(12,5);
+    cout<<(char)219<<" Add Book Information "<<(char)219;
+    gotoxy(12,7);
+    cout<<"ID: ";
+    gotoxy(12,8);
+    cout<<"Book Name: ";
+    gotoxy(12,9);
+    cout<<"Book Category: ";
+    gotoxy(12,10);
+    cout<<"Book Author: ";
+    gotoxy(12,11);
+    cout<<"Book SSNO: ";
+    gotoxy(12,12);
+    cout<<"Book RACK NO: ";
+    gotoxy(30,10);
+    cout<<massage;
+    gotoxy(20,25);
+    cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
+    rightSide();
+    footerPart();
+
+    // take input from console
+    gotoxy(50,24);
+    cin>>check;
+
+    switch(check)
+    {
+    case 0:
+        return 0;
+        break;
+    case 1:
+        book.bookId=bookInfo[i-1].bookId+1;
+        gotoxy(30,7);
+        cout<<book.bookId;
+        gotoxy(30,8);
+        cin>>book.bookName;
+        gotoxy(30,9);
+        cin>>book.bookCategory;
+        gotoxy(30,10);
+        cin>>book.bookAuthorName;
+        gotoxy(30,11);
+        cin>>book.bookSSNO;
+        gotoxy(30,12);
+        cin>>book.bookRackNumber;
+
+        file <<book.bookId<<":"<<book.bookName<<":"<<book.bookCategory<<":"<<book.bookAuthorName<<":"<<book.bookSSNO<<":"<<book.bookRackNumber<<"\n";
+        massage="Data Save !!";
+
+        system("cls");
+        file.close();
+        goto strt;
+        break;
+    case 2:
+        system("cls");
+        viewCategory();
+        system("cls");
+        goto strt;
+        break;
+    }
+}
+
+
+
+
 int mainWindow()
 {
 lblViewStart:
@@ -381,6 +529,11 @@ lblViewStart:
         goto lblViewStart;
 
         break;
+    case 3:
+        system("cls");
+        addBook();
+        system("cls");
+        goto lblViewStart;
     case 0:
         return 0;
     }
