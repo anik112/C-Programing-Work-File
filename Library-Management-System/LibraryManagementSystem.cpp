@@ -269,6 +269,8 @@ lblStrt:
     }
 
 }
+
+
 /// add new category function
 int addCategory()
 {
@@ -359,7 +361,6 @@ lblStrt:
         cout<<"RACK NO       :"<<token<<"\n";
         token = strtok(NULL, ":");
         cout<<"Book QTY      :"<<token<<"\n";
-
         cout<<"---------------\n\n";
     }
 
@@ -938,6 +939,114 @@ strt:
 
 
 
+/// Return Issue book
+int returnBook()
+{
+
+    /* int tagNumber;
+        string stdId;
+        string stdName;
+        int bookId;
+        int issueQTY;
+        BookInfo book; */
+
+    int check=-1,i=0;
+    string massage="";
+strt:
+    IssueBook issueBooks;
+    BookInfo bookInfo;
+    ifstream readIssueBookLink ("issue-book.txt");
+    ofstream issueBookLink ("issue-book2.txt",ofstream::app);
+    ifstream readBookLink ("book-info.txt");
+    ofstream bookLink ("book-info2.txt",ofstream::app);
+    int tagNo=0;
+    string stdId="";
+    int bookId=0;
+    int returnQty=0;
+
+    // view design
+    headerPart();
+    leftSide();
+    gotoxy(12,5);
+    cout<<(char)219<<" Issue Book Information "<<(char)219;
+    gotoxy(12,7);
+    cout<<"Tag NO: ";
+    gotoxy(12,8);
+    cout<<"Student ID: ";
+    gotoxy(12,9);
+    cout<<"Book ID: ";
+    gotoxy(12,10);
+    cout<<"Return QTY: ";
+    gotoxy(40,20);
+    cout<<massage;
+    gotoxy(20,25);
+    cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
+    rightSide();
+    footerPart();
+
+    // take input from console
+    gotoxy(50,24);
+    cin>>check;
+
+    switch(check)
+    {
+    case 0:
+        return 0;
+        break;
+    case 1:
+    {
+        gotoxy(30,7);
+        cin>>tagNo;
+        gotoxy(30,8);
+        cin>>stdId;
+        gotoxy(30,9);
+        cin>>bookId;
+        gotoxy(30,10);
+        cin>>returnQty;
+
+        string lineText="";
+        while(getline(readIssueBookLink, lineText))
+        {
+            string tmpLine=lineText;
+            char *str=strdup(tmpLine.c_str());
+            // Returns first token
+            char *token = strtok(str, ":");
+            // Keep printing tokens while one of the
+            // delimiters present in str[].
+            int tmpTage=atoi(token);
+            token = strtok(NULL, ":");
+            string tmpStdId=token;
+            token = strtok(NULL, ":");
+            token = strtok(NULL, ":");
+            int tmpBookId=0;
+            if((tagNo==tmpTage) && (stdId==tmpStdId) && (bookId==tmpBookId))
+            {
+                continue;
+            }
+            issueBookLink<<lineText;
+        }
+
+        readIssueBookLink.close();
+        issueBookLink.close();
+        bookLink.close();
+        readBookLink.close();
+
+        remove("issue-book.txt");
+        rename("issue-book2.txt","issue-book.txt");
+        remove("book-info2.txt");
+        massage="Data Update !!";
+        system("cls");
+        goto strt;
+    }
+    break;
+    case 2:
+        system("cls");
+        viewBookIssue();
+        system("cls");
+        goto strt;
+        break;
+    }
+}
 
 
 
@@ -1021,6 +1130,11 @@ lblViewStart:
         system("cls");
         goto lblViewStart;
         break;
+    case 7:
+        system("cls");
+        returnBook();
+        system("cls");
+        goto lblViewStart;
     case 0:
         return 0;
     }
