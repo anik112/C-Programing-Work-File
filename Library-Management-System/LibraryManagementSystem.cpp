@@ -161,7 +161,7 @@ lblStrt:
         cout<<"Author ID   :"<<token<<"\n";
         token = strtok(NULL, ":");
         cout<<"Author Name :"<<token<<"\n";
-        cout<<"====\n";
+        cout<<"-------------\n\n";
     }
 
     cin>>checker;
@@ -254,7 +254,7 @@ lblStrt:
         cout<<"Category ID   :"<<token<<"\n";
         token = strtok(NULL, ":");
         cout<<"Category Name :"<<token<<"\n";
-        cout<<"====\n";
+        cout<<"---------------\n\n";
     }
 
     cin>>checker;
@@ -360,7 +360,7 @@ lblStrt:
         token = strtok(NULL, ":");
         cout<<"Book QTY      :"<<token<<"\n";
 
-        cout<<"====\n";
+        cout<<"---------------\n\n";
     }
 
     cin>>checker;
@@ -650,6 +650,25 @@ strt:
     cout<<"Book ID: ";
     gotoxy(40,20);
     cout<<massage;
+
+    string read="";
+    int i=0;
+    while(getline(readBookLink, read))
+    {
+        char *str=strdup(read.c_str());
+        // Returns first token
+        char *token = strtok(str, ":");
+        // Keep printing tokens while one of the
+        // delimiters present in str[].
+        gotoxy(95,2);
+        cout<<"<<Book List>>";
+        int id=atoi(token);
+        token = strtok(NULL, ":");
+        string name=token;
+        gotoxy(95,i+2);
+        cout<<" "<<id<<" - "<<name;
+        i++;
+    }
     gotoxy(30,25);
     cout<<": Press [0] For Cancel,[1] For Delete Another :";
     rightSide();
@@ -853,17 +872,14 @@ strt:
         string lineText="";
         while(getline(readBookLink, lineText))
         {
-            char *str=strdup(lineText.c_str());
+            string tmpLine=lineText;
+            char *str=strdup(tmpLine.c_str());
             // Returns first token
             char *token = strtok(str, ":");
             // Keep printing tokens while one of the
             // delimiters present in str[].
-            gotoxy(95,2);
-            cout<<"<<Book List>>";
             bookInfo.bookId=atoi(token);
             issueBooks.book.bookId=atoi(token);
-            gotoxy(95,i+2);
-            cout<<" "<<bookInfo.bookId;
             token = strtok(NULL, ":");
             if((bookInfo.bookId==issueBooks.bookId) && (bookInfo.bookId>0))
             {
