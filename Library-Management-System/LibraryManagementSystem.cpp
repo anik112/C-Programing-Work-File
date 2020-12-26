@@ -194,7 +194,7 @@ strt:
     cout<<"ID: ";
     gotoxy(12,8);
     cout<<"Author Name: ";
-    gotoxy(30,10);
+    gotoxy(40,20);
     cout<<massage;
     gotoxy(20,25);
     cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
@@ -287,7 +287,7 @@ strt:
     cout<<"ID: ";
     gotoxy(12,8);
     cout<<"Category Name: ";
-    gotoxy(30,10);
+    gotoxy(40,20);
     cout<<massage;
     gotoxy(20,25);
     cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
@@ -489,7 +489,7 @@ strt:
     cout<<"Book RACK NO: ";
     gotoxy(12,13);
     cout<<"Book QTY: ";
-    gotoxy(30,10);
+    gotoxy(40,20);
     cout<<massage;
     gotoxy(20,25);
     cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
@@ -648,7 +648,7 @@ strt:
     cout<<(char)219<<" Delete Book Information "<<(char)219;
     gotoxy(12,7);
     cout<<"Book ID: ";
-    gotoxy(30,10);
+    gotoxy(40,20);
     cout<<massage;
     gotoxy(30,25);
     cout<<": Press [0] For Cancel,[1] For Delete Another :";
@@ -703,7 +703,7 @@ strt:
         bookLink.close();
         remove("book-info.txt");
         rename("book-info2.txt","book-info.txt");
-
+        remove("book-info2.txt");
         system("cls");
         goto strt;
 
@@ -713,7 +713,60 @@ strt:
     }
 }
 
+/// View Book issue
+int viewBookIssue()
+{
+lblStrt:
+    int checker=-1;
+    //=================
+    ifstream MyReadFile("issue-book.txt");
+    string lineText="";
 
+    cout<<":: View All Book Issue Information :: \n\n";
+
+    while(getline(MyReadFile, lineText))
+    {
+        char *str=strdup(lineText.c_str());
+        // Returns first token
+        char *token = strtok(str, ":");
+
+        // Keep printing tokens while one of the
+        // delimiters present in str[].
+        cout<<"Tag No        :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Student ID    :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Student Name  :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Book ID       :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Issue QTY     :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Book Name     :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Book Category :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"Author Name   :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"SSN NO        :"<<token<<"\n";
+        token = strtok(NULL, ":");
+        cout<<"RACK NO       :"<<token<<"\n";
+
+        cout<<"---------------\n\n";
+    }
+
+    cin>>checker;
+    if((checker)==0)
+    {
+        system("cls");
+        return 0;
+    }
+    else
+    {
+        goto lblStrt;
+    }
+    return 0;
+}
 
 /// Issue book
 int issueBook()
@@ -726,7 +779,7 @@ int issueBook()
         int issueQTY;
         BookInfo book; */
 
-    int check=-1;
+    int check=-1,i=0;
     string massage="";
 strt:
     IssueBook issueBooks;
@@ -750,12 +803,30 @@ strt:
     cout<<"Book ID: ";
     gotoxy(12,11);
     cout<<"Issue QTY: ";
-    gotoxy(30,10);
+    gotoxy(40,20);
     cout<<massage;
     gotoxy(20,25);
     cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
     rightSide();
     footerPart();
+
+    string read="";
+    while(getline(readBookLink, read))
+    {
+        char *str=strdup(read.c_str());
+        // Returns first token
+        char *token = strtok(str, ":");
+        // Keep printing tokens while one of the
+        // delimiters present in str[].
+        gotoxy(95,2);
+        cout<<"<<Book List>>";
+        int id=atoi(token);
+        token = strtok(NULL, ":");
+        string name=token;
+        gotoxy(95,i+2);
+        cout<<" "<<id<<" - "<<name;
+        i++;
+    }
 
     // take input from console
     gotoxy(50,24);
@@ -787,54 +858,69 @@ strt:
             char *token = strtok(str, ":");
             // Keep printing tokens while one of the
             // delimiters present in str[].
+            gotoxy(95,2);
+            cout<<"<<Book List>>";
             bookInfo.bookId=atoi(token);
+            issueBooks.book.bookId=atoi(token);
+            gotoxy(95,i+2);
+            cout<<" "<<bookInfo.bookId;
             token = strtok(NULL, ":");
-            if(bookInfo.bookId==issueBooks.bookId)
+            if((bookInfo.bookId==issueBooks.bookId) && (bookInfo.bookId>0))
             {
                 bookInfo.bookName=token;
+                issueBooks.book.bookName=token;
                 token = strtok(NULL, ":");
                 bookInfo.bookCategory=token;
+                issueBooks.book.bookCategory=token;
                 token = strtok(NULL, ":");
                 bookInfo.bookAuthorName=token;
+                issueBooks.book.bookAuthorName=token;
                 token = strtok(NULL, ":");
                 bookInfo.bookSSNO=token;
+                issueBooks.book.bookSSNO=token;
                 token = strtok(NULL, ":");
                 bookInfo.bookRackNumber=token;
+                issueBooks.book.bookRackNumber=token;
                 token = strtok(NULL, ":");
                 bookInfo.bookQty=atoi(token);
 
-                bookLink<<bookInfo.bookId<<bookInfo.bookName<<bookInfo.bookCategory<<bookInfo.bookAuthorName<<bookInfo.bookSSNO
-                        <<bookInfo.bookRackNumber<<(bookInfo.bookQty-issueBooks.issueQTY)<<"\n";
-                break;
+                bookLink<<bookInfo.bookId<<":"<<bookInfo.bookName<<":"<<bookInfo.bookCategory<<":"<<bookInfo.bookAuthorName<<":"<<bookInfo.bookSSNO<<":"
+                        <<bookInfo.bookRackNumber<<":"<<(bookInfo.bookQty-issueBooks.issueQTY)<<"\n";
+
+                issueBookLink <<issueBooks.tagNumber<<":"<<issueBooks.stdId<<":"<<issueBooks.stdName<<":"<<issueBooks.book.bookId<<":"<<issueBooks.issueQTY<<":"<<issueBooks.book.bookName<<":"
+                              <<issueBooks.book.bookCategory<<":"<<issueBooks.book.bookAuthorName<<":"<<issueBooks.book.bookSSNO<<":"<<issueBooks.book.bookRackNumber<<"\n";
+                continue;
+            }
+            else
+            {
+                gotoxy(40,20);
+                cout<<"Book is not Available !!";
             }
             bookLink <<lineText<<"\n";
         }
 
-        issueBookLink <<issueBooks.tagNumber<<issueBooks.stdId<<issueBooks.stdName<<issueBooks.book.bookId<<":"<<issueBooks.issueQTY<<":"<<issueBooks.book.bookName<<":"
-                      <<issueBooks.book.bookCategory<<":"<<issueBooks.book.bookAuthorName<<":"<<issueBooks.book.bookSSNO<<":"<<issueBooks.book.bookRackNumber<<":"<<"\n";
         issueBookLink.close();
         bookLink.close();
         readBookLink.close();
 
         remove("book-info.txt");
         rename("book-info2.txt","book-info.txt");
-
+        remove("book-info2.txt");
         massage="Data Save !!";
         system("cls");
-
         goto strt;
     }
     break;
     case 2:
         system("cls");
-        viewCategory();
+        viewBookIssue();
         system("cls");
         goto strt;
         break;
     }
-
-
 }
+
+
 
 
 
