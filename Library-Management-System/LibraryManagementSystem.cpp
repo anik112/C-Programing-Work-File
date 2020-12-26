@@ -348,20 +348,33 @@ lblStrt:
 
         // Keep printing tokens while one of the
         // delimiters present in str[].
-        cout<<"Book ID       :"<<token<<"\n";
+        int id=atoi(token);
         token = strtok(NULL, ":");
-        cout<<"Book Name     :"<<token<<"\n";
+        string name=token;
         token = strtok(NULL, ":");
-        cout<<"Book Category :"<<token<<"\n";
+        string categry=token;
         token = strtok(NULL, ":");
-        cout<<"Author Name   :"<<token<<"\n";
+        string authName=token;
         token = strtok(NULL, ":");
-        cout<<"SSN NO        :"<<token<<"\n";
+        string ssn=token;
         token = strtok(NULL, ":");
-        cout<<"RACK NO       :"<<token<<"\n";
+        string rakNo=token;
         token = strtok(NULL, ":");
-        cout<<"Book QTY      :"<<token<<"\n";
-        cout<<"---------------\n\n";
+        int bookQty=atoi(token);
+        token = strtok(NULL, ":");
+        int active=atoi(token);
+
+        if(active==0)
+        {
+            cout<<"Book ID       :"<<id<<"\n";
+            cout<<"Book Name     :"<<name<<"\n";
+            cout<<"Book Category :"<<categry<<"\n";
+            cout<<"Author Name   :"<<authName<<"\n";
+            cout<<"SSN NO        :"<<ssn<<"\n";
+            cout<<"RACK NO       :"<<rakNo<<"\n";
+            cout<<"Book QTY      :"<<bookQty<<"\n";
+            cout<<"---------------\n\n";
+        }
     }
 
     cin>>checker;
@@ -524,7 +537,8 @@ strt:
         gotoxy(30,13);
         cin>>book.bookQty;
 
-        file <<book.bookId<<":"<<book.bookName<<":"<<book.bookCategory<<":"<<book.bookAuthorName<<":"<<book.bookSSNO<<":"<<book.bookRackNumber<<":"<<book.bookQty<<"\n";
+        file <<book.bookId<<":"<<book.bookName<<":"<<book.bookCategory<<":"<<book.bookAuthorName<<":"
+             <<book.bookSSNO<<":"<<book.bookRackNumber<<":"<<book.bookQty<<":"<<"0"<<"\n";
         massage="Data Save !!";
 
         system("cls");
@@ -602,21 +616,23 @@ lblStrt:
         bookInfo.bookRackNumber=token;
         token = strtok(NULL, ":");
         bookInfo.bookQty=atoi(token);
+        token = strtok(NULL, ":");
+        int active=atoi(token);
 
         if((bookInfo.bookId==id) || (bookInfo.bookName==name)
-                || (bookInfo.bookSSNO==ssnNo) || (bookInfo.bookRackNumber==rackNo))
+                || (bookInfo.bookSSNO==ssnNo) || (bookInfo.bookRackNumber==rackNo) && (active==0))
         {
+            cout<<"\n\nBook ID       :"<<bookInfo.bookId<<"\n";
+            cout<<"Book Name     :"<<bookInfo.bookName<<"\n";
+            cout<<"Book Category :"<<bookInfo.bookCategory<<"\n";
+            cout<<"Author Name   :"<<bookInfo.bookAuthorName<<"\n";
+            cout<<"SSN NO        :"<<bookInfo.bookSSNO<<"\n";
+            cout<<"RACK NO       :"<<bookInfo.bookRackNumber<<"\n";
+            cout<<"Book QTY      :"<<bookInfo.bookQty<<"\n";
+
             break;
         }
     }
-
-    cout<<"\n\nBook ID       :"<<bookInfo.bookId<<"\n";
-    cout<<"Book Name     :"<<bookInfo.bookName<<"\n";
-    cout<<"Book Category :"<<bookInfo.bookCategory<<"\n";
-    cout<<"Author Name   :"<<bookInfo.bookAuthorName<<"\n";
-    cout<<"SSN NO        :"<<bookInfo.bookSSNO<<"\n";
-    cout<<"RACK NO       :"<<bookInfo.bookRackNumber<<"\n";
-    cout<<"Book QTY      :"<<bookInfo.bookQty<<"\n";
 
     cout<<"\n[1]Search Again,[0]Exit: ";
     cin>>checker;
@@ -702,12 +718,30 @@ strt:
             int currentId=atoi(token);
             if(userGivenId==currentId)
             {
+                BookInfo bookInfo;
                 token = strtok(NULL, ":");
                 gotoxy(12,8);
                 cout<<"Book Name: "<<token;
                 token = strtok(NULL, ":");
                 gotoxy(12,9);
                 cout<<"Book Category: "<<token;
+
+                bookInfo.bookName=token;
+                token = strtok(NULL, ":");
+                bookInfo.bookCategory=token;
+                token = strtok(NULL, ":");
+                bookInfo.bookAuthorName=token;
+                token = strtok(NULL, ":");
+                bookInfo.bookSSNO=token;
+                token = strtok(NULL, ":");
+                bookInfo.bookRackNumber=token;
+                token = strtok(NULL, ":");
+                bookInfo.bookQty=atoi(token);
+                token = strtok(NULL, ":");
+                int active=1;
+
+                bookLink<<bookInfo.bookId<<":"<<bookInfo.bookName<<":"<<bookInfo.bookCategory<<":"<<bookInfo.bookAuthorName<<":"<<bookInfo.bookSSNO<<":"
+                        <<bookInfo.bookRackNumber<<":"<<bookInfo.bookQty<<":"<<active<<"\n";
 
                 massage="Data Delete !!";
                 continue;
@@ -1142,9 +1176,11 @@ lblViewStart:
 }
 
 
-
 int main()
 {
-    mainWindow();
+    if(login())
+    {
+        mainWindow();
+    }
     return 0;
 }
