@@ -81,6 +81,7 @@ public:
     string bookSSNO;
     string bookRackNumber;
     int bookQty;
+    int active;
 };
 
 
@@ -119,16 +120,23 @@ bool login()
     headerPart();
     leftSide();
 
-    gotoxy(35,9);
+    gotoxy(32,6);
+    cout<<"+++++++++++++++++++++++++++++++";
+    gotoxy(32,7);
+    cout<<"@@ Library Management System @@";
+    gotoxy(32,8);
+    cout<<"+++++++++++++++++++++++++++++++";
+
+    gotoxy(32,15);
     cout<<"########## Login ##########";
-    gotoxy(35,11);
+    gotoxy(32,17);
     cout<<"Password: ";
-    gotoxy(35,13);
+    gotoxy(32,19);
     cout<<"###########################";
     rightSide();
     footerPart();
 
-    gotoxy(45,11);
+    gotoxy(45,17);
     cin>>pass;
     if(pass==123)
     {
@@ -655,9 +663,6 @@ int deleteBook()
     int check=-1;
     string massage="";
 strt:
-    ifstream readBookLink ("book-info.txt");
-    ofstream bookLink ("book-info2.txt",ofstream::app);
-
     // view design
     headerPart();
     leftSide();
@@ -668,29 +673,44 @@ strt:
     gotoxy(40,20);
     cout<<massage;
 
+    gotoxy(95,2);
+    cout<<"<<Book List>>";
     string read="";
-    int i=0;
-    while(getline(readBookLink, read))
+    int i=1;
+    ifstream tmpReadBookLink ("book-info.txt");
+    while(getline(tmpReadBookLink, read))
     {
         char *str=strdup(read.c_str());
         // Returns first token
         char *token = strtok(str, ":");
         // Keep printing tokens while one of the
         // delimiters present in str[].
-        gotoxy(95,2);
-        cout<<"<<Book List>>";
         int id=atoi(token);
         token = strtok(NULL, ":");
         string name=token;
-        gotoxy(95,i+2);
-        cout<<" "<<id<<" - "<<name;
-        i++;
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        int active=atoi(token);
+        if(active==0)
+        {
+            gotoxy(95,i+2);
+            cout<<" "<<id<<" - "<<name;
+            i++;
+        }
     }
+    tmpReadBookLink.close();
     gotoxy(30,25);
     cout<<": Press [0] For Cancel,[1] For Delete Another :";
     rightSide();
     footerPart();
 
+    // call file
+    ifstream readBookLink ("book-info.txt");
+    ofstream bookLink ("book-info2.txt",ofstream::app);
     // take input from console
     gotoxy(50,24);
     cin>>check;
@@ -702,7 +722,6 @@ strt:
         break;
     case 1:
     {
-        massage="";
         int userGivenId=0;
         gotoxy(30,7);
         cin>>userGivenId;
@@ -715,17 +734,11 @@ strt:
             char *token = strtok(str, ":");
             // Keep printing tokens while one of the
             // delimiters present in str[].
-            int currentId=atoi(token);
-            if(userGivenId==currentId)
+            BookInfo bookInfo;
+            bookInfo.bookId=atoi(token);
+            if(bookInfo.bookId==userGivenId)
             {
-                BookInfo bookInfo;
                 token = strtok(NULL, ":");
-                gotoxy(12,8);
-                cout<<"Book Name: "<<token;
-                token = strtok(NULL, ":");
-                gotoxy(12,9);
-                cout<<"Book Category: "<<token;
-
                 bookInfo.bookName=token;
                 token = strtok(NULL, ":");
                 bookInfo.bookCategory=token;
@@ -748,11 +761,11 @@ strt:
             }
             else
             {
-                bookLink<<lineText<<"\n";
+                massage="Data Not Found !!";
             }
+
+            bookLink<<lineText<<"\n";
         }
-
-
         readBookLink.close();
         bookLink.close();
         remove("book-info.txt");
@@ -762,7 +775,6 @@ strt:
         goto strt;
 
     }
-
     break;
     }
 }
@@ -833,15 +845,9 @@ int issueBook()
         int issueQTY;
         BookInfo book; */
 
-    int check=-1,i=0;
+    int check=-1,i=1;
     string massage="";
 strt:
-    IssueBook issueBooks;
-    ofstream issueBookLink ("issue-book.txt",ofstream::app);
-    BookInfo bookInfo;
-    ifstream readBookLink ("book-info.txt");
-    ofstream bookLink ("book-info2.txt",ofstream::app);
-
     // view design
     headerPart();
     leftSide();
@@ -864,23 +870,36 @@ strt:
     rightSide();
     footerPart();
 
+    gotoxy(95,2);
+    cout<<"<<Book List>>";
     string read="";
-    while(getline(readBookLink, read))
+    ifstream tempReadBookLink ("book-info.txt");
+    while(getline(tempReadBookLink, read))
     {
         char *str=strdup(read.c_str());
         // Returns first token
         char *token = strtok(str, ":");
         // Keep printing tokens while one of the
         // delimiters present in str[].
-        gotoxy(95,2);
-        cout<<"<<Book List>>";
         int id=atoi(token);
         token = strtok(NULL, ":");
         string name=token;
-        gotoxy(95,i+2);
-        cout<<" "<<id<<" - "<<name;
-        i++;
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        token = strtok(NULL, ":");
+        int active=atoi(token);
+        if(active==0)
+        {
+            gotoxy(95,i+2);
+            cout<<" "<<id<<" - "<<name;
+            i++;
+        }
     }
+    tempReadBookLink.close();
+    // END DESIGN VIEW
 
     // take input from console
     gotoxy(50,24);
@@ -893,8 +912,26 @@ strt:
         break;
     case 1:
     {
+        IssueBook issueBooks;
+        ofstream issueBookLink ("issue-book.txt",ofstream::app);
+        BookInfo bookInfo;
+        ifstream readBookLink ("book-info.txt");
+        ofstream bookLink ("book-info2.txt",ofstream::app);
+
+        ifstream readIssueBookLink ("issue-book.txt");
+        int tagNumber=0;
+        string rd="";
+        while(getline(readIssueBookLink, rd))
+        {
+            char *str=strdup(rd.c_str());
+            char *token = strtok(str, ":");
+            tagNumber=atoi(token);
+        }
+        readIssueBookLink.close();
+
         gotoxy(30,7);
-        cin>>issueBooks.tagNumber;
+        issueBooks.tagNumber=(tagNumber+1);
+        cout<<issueBooks.tagNumber;
         gotoxy(30,8);
         cin>>issueBooks.stdId;
         gotoxy(30,9);
@@ -916,30 +953,33 @@ strt:
             bookInfo.bookId=atoi(token);
             issueBooks.book.bookId=atoi(token);
             token = strtok(NULL, ":");
-            if((bookInfo.bookId==issueBooks.bookId) && (bookInfo.bookId>0))
-            {
-                bookInfo.bookName=token;
-                issueBooks.book.bookName=token;
-                token = strtok(NULL, ":");
-                bookInfo.bookCategory=token;
-                issueBooks.book.bookCategory=token;
-                token = strtok(NULL, ":");
-                bookInfo.bookAuthorName=token;
-                issueBooks.book.bookAuthorName=token;
-                token = strtok(NULL, ":");
-                bookInfo.bookSSNO=token;
-                issueBooks.book.bookSSNO=token;
-                token = strtok(NULL, ":");
-                bookInfo.bookRackNumber=token;
-                issueBooks.book.bookRackNumber=token;
-                token = strtok(NULL, ":");
-                bookInfo.bookQty=atoi(token);
+            bookInfo.bookName=token;
+            issueBooks.book.bookName=token;
+            token = strtok(NULL, ":");
+            bookInfo.bookCategory=token;
+            issueBooks.book.bookCategory=token;
+            token = strtok(NULL, ":");
+            bookInfo.bookAuthorName=token;
+            issueBooks.book.bookAuthorName=token;
+            token = strtok(NULL, ":");
+            bookInfo.bookSSNO=token;
+            issueBooks.book.bookSSNO=token;
+            token = strtok(NULL, ":");
+            bookInfo.bookRackNumber=token;
+            issueBooks.book.bookRackNumber=token;
+            token = strtok(NULL, ":");
+            bookInfo.bookQty=atoi(token);
+            token = strtok(NULL, ":");
+            bookInfo.active=atoi(token);
 
+            if((bookInfo.bookId==issueBooks.bookId) && (bookInfo.bookId>0) && (bookInfo.active==0))
+            {
                 bookLink<<bookInfo.bookId<<":"<<bookInfo.bookName<<":"<<bookInfo.bookCategory<<":"<<bookInfo.bookAuthorName<<":"<<bookInfo.bookSSNO<<":"
-                        <<bookInfo.bookRackNumber<<":"<<(bookInfo.bookQty-issueBooks.issueQTY)<<"\n";
+                        <<bookInfo.bookRackNumber<<":"<<(bookInfo.bookQty-issueBooks.issueQTY)<<":"<<bookInfo.active<<"\n";
 
                 issueBookLink <<issueBooks.tagNumber<<":"<<issueBooks.stdId<<":"<<issueBooks.stdName<<":"<<issueBooks.book.bookId<<":"<<issueBooks.issueQTY<<":"<<issueBooks.book.bookName<<":"
                               <<issueBooks.book.bookCategory<<":"<<issueBooks.book.bookAuthorName<<":"<<issueBooks.book.bookSSNO<<":"<<issueBooks.book.bookRackNumber<<"\n";
+                massage="Book Issue !!";
                 continue;
             }
             else
@@ -950,9 +990,9 @@ strt:
             bookLink <<lineText<<"\n";
         }
 
+        readBookLink.close();
         issueBookLink.close();
         bookLink.close();
-        readBookLink.close();
 
         remove("book-info.txt");
         rename("book-info2.txt","book-info.txt");
@@ -987,17 +1027,6 @@ int returnBook()
     int check=-1,i=0;
     string massage="";
 strt:
-    IssueBook issueBooks;
-    BookInfo bookInfo;
-    ifstream readIssueBookLink ("issue-book.txt");
-    ofstream issueBookLink ("issue-book2.txt",ofstream::app);
-    ifstream readBookLink ("book-info.txt");
-    ofstream bookLink ("book-info2.txt",ofstream::app);
-    int tagNo=0;
-    string stdId="";
-    int bookId=0;
-    int returnQty=0;
-
     // view design
     headerPart();
     leftSide();
@@ -1009,14 +1038,13 @@ strt:
     cout<<"Student ID: ";
     gotoxy(12,9);
     cout<<"Book ID: ";
-    gotoxy(12,10);
-    cout<<"Return QTY: ";
     gotoxy(40,20);
     cout<<massage;
     gotoxy(20,25);
     cout<<": Press [0] For Cancel,[1] For Add Another,[2] For View :";
     rightSide();
     footerPart();
+    // END VIEW DESIGN
 
     // take input from console
     gotoxy(50,24);
@@ -1029,14 +1057,23 @@ strt:
         break;
     case 1:
     {
+        IssueBook issueBooks;
+        BookInfo bookInfo;
+        ifstream readIssueBookLink ("issue-book.txt");
+        ofstream issueBookLink ("issue-book2.txt",ofstream::app);
+        ifstream readBookLink ("book-info.txt");
+        ofstream bookLink ("book-info2.txt",ofstream::app);
+        int tagNo=0;
+        string stdId="";
+        int bookId=0;
+        int returnQty=0;
+
         gotoxy(30,7);
         cin>>tagNo;
         gotoxy(30,8);
         cin>>stdId;
         gotoxy(30,9);
         cin>>bookId;
-        gotoxy(30,10);
-        cin>>returnQty;
 
         string lineText="";
         while(getline(readIssueBookLink, lineText))
@@ -1052,22 +1089,64 @@ strt:
             string tmpStdId=token;
             token = strtok(NULL, ":");
             token = strtok(NULL, ":");
-            int tmpBookId=0;
+            int tmpBookId=atoi(token);
+            token = strtok(NULL, ":");
+            returnQty=atoi(token);
+
             if((tagNo==tmpTage) && (stdId==tmpStdId) && (bookId==tmpBookId))
             {
+
+                string lineText="";
+                while(getline(readBookLink, lineText))
+                {
+                    string tmpLine=lineText;
+                    char *str=strdup(tmpLine.c_str());
+                    // Returns first token
+                    char *token = strtok(str, ":");
+                    // Keep printing tokens while one of the
+                    // delimiters present in str[].
+                    bookInfo.bookId=atoi(token);
+                    token = strtok(NULL, ":");
+
+                    if(bookInfo.bookId==bookId)
+                    {
+                        bookInfo.bookName=token;
+                        token = strtok(NULL, ":");
+                        bookInfo.bookCategory=token;
+                        token = strtok(NULL, ":");
+                        bookInfo.bookAuthorName=token;
+                        token = strtok(NULL, ":");
+                        bookInfo.bookSSNO=token;
+                        token = strtok(NULL, ":");
+                        bookInfo.bookRackNumber=token;
+                        token = strtok(NULL, ":");
+                        bookInfo.bookQty=atoi(token);
+                        token = strtok(NULL, ":");
+                        bookInfo.active=atoi(token);
+
+                        bookLink<<bookInfo.bookId<<":"<<bookInfo.bookName<<":"<<bookInfo.bookCategory<<":"<<bookInfo.bookAuthorName<<":"<<bookInfo.bookSSNO<<":"
+                                <<bookInfo.bookRackNumber<<":"<<(bookInfo.bookQty+returnQty)<<":"<<bookInfo.active<<"\n";
+                        returnQty=0;
+                        continue;
+                    }
+                    bookLink <<lineText<<"\n";
+                }
+                readBookLink.close();
+                bookLink.close();
+                remove("book-info.txt");
+                rename("book-info2.txt","book-info.txt");
+                remove("book-info2.txt");
                 continue;
             }
-            issueBookLink<<lineText;
+            issueBookLink<<lineText<<"\n";
         }
 
         readIssueBookLink.close();
         issueBookLink.close();
-        bookLink.close();
-        readBookLink.close();
 
         remove("issue-book.txt");
         rename("issue-book2.txt","issue-book.txt");
-        remove("book-info2.txt");
+        remove("issue-book2.txt");
         massage="Data Update !!";
         system("cls");
         goto strt;
@@ -1131,14 +1210,12 @@ lblViewStart:
         addCategory();
         system("cls");
         goto lblViewStart;
-
         break;
     case 2:
         system("cls");
         addAuthor();
         system("cls");
         goto lblViewStart;
-
         break;
     case 3:
         system("cls");
@@ -1170,10 +1247,10 @@ lblViewStart:
         system("cls");
         goto lblViewStart;
     case 0:
-        return 0;
+        system("cls");
     }
-
 }
+
 
 
 int main()
